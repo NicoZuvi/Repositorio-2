@@ -30,8 +30,10 @@ function handleGet($conn)
 function handlePost($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
-    $existent_studen = getStudentByName($conn, $input['fullname']);
-    if($existent_studen != NULL)
+
+    $existent_student = getStudentByName($conn, $input['fullname']);
+
+    if($existent_student != NULL)
     {
         http_response_code(400);
         echo json_encode(["error" => "Duplicated_student"]);

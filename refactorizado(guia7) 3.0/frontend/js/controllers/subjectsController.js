@@ -46,7 +46,13 @@ function setupSubjectFormHandler()
         }
         catch (err)
         {
-            alert('Esa materia ya existe');
+            if(err.error === "Duplicated_subject")
+                alert('Ese estudiante ya existe');
+            else
+            {
+                if(err.error === "No se pudo crear")
+                    alert('Error en el servidor');
+            }
         }
   });
 }

@@ -40,7 +40,6 @@ function setupFormHandler()
         }
         catch (err)
         {
-            console.log("Error capturado:", err);
             if(err.error === "Duplicated_student")
                 alert('Ese estudiante ya existe');
             else

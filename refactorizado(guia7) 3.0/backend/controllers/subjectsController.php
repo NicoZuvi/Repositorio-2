@@ -31,15 +31,26 @@ function handlePost($conn)
 {
     $input = json_decode(file_get_contents("php://input"), true);
 
-    $result = createSubject($conn, $input['name']);
-    if ($result['inserted'] > 0) 
+    $existent_Subject = getStudentByName($conn, $input['name']);
+
+    if($existent_Subject!=NULL)
     {
-        echo json_encode(["message" => "Materia creada correctamente"]);
-    } 
-    else 
+        http_response_code(400);
+        echo json_encode(["error" => "Duplicated_subject"]);
+    }
+    else
     {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo crear"]);
+        $result = createSubject($conn, $input['name']);
+
+        if ($result['inserted'] > 0) 
+        {
+            echo json_encode(["message" => "Materia creada correctamente"]);
+        } 
+        else 
+        {
+            http_response_code(500);
+            echo json_encode(["error" => "No se pudo crear"]);
+        }
     }
 }
 
