@@ -136,7 +136,14 @@ async function confirmDeleteSubject(id)
     }
     catch (err)
     {
-        console.error('Error al borrar materia:', err.message);
+        if(err.error === "has_relation")
+        {
+            alert('La materia tiene estudiantes anotados, por lo que no se puede eliminar');
+        }
+        else
+        {
+            console.error('Error al borrar materia:', err.error);
+        }
     }
 }
 /*

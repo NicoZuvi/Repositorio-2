@@ -76,7 +76,14 @@ function setupFormHandler()
         } 
         catch (err) 
         {
-            alert('No se pudo guardar esa relacion');
+            if(err.error === "Relation_exists")
+            {
+                alert('Ese estudiante ya esta registrado en esa materia');
+            }
+            else
+            {
+                alert('No se pudo guardar esa relacion');
+            }
         }
     });
 }

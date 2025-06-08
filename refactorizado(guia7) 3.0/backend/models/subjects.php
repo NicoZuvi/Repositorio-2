@@ -64,11 +64,26 @@ function updateSubject($conn, $id, $name)
 
 function deleteSubject($conn, $id) 
 {
-    $sql = "DELETE FROM subjects WHERE id = ?";
-    $stmt = $conn->prepare($sql);
+    $eliminable = "SELECT COUNT(*) FROM students_subjects WHERE subject_id = ?";               //Contas en la tabla de relacion estudiante-materia si hay algun/algunos estudiantes anotados
+    $stmt = $conn->prepare($eliminable);
     $stmt->bind_param("i", $id);
     $stmt->execute();
+    $count = 0;
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
+    if($count == 0)                                                         //Si no hay estudiantes anotados en esa materia, puedo eliminarlo
+    {
+        $sql = "DELETE FROM subjects WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
 
-    return ['deleted' => $stmt->affected_rows];
+        return ['deleted' => $stmt->affected_rows];
+    }
+    else                                                            //Caso contrario, devuelvo un registro "error" con un mensaje "has_relations"
+    {
+        return ['error' => "has_relations"];
+    }
 }
 ?>

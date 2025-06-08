@@ -152,7 +152,14 @@ async function confirmDelete(id)
     } 
     catch (err) 
     {
-        console.error('Error al borrar:', err.message);
+        if(err.error === "has_relation")
+        {
+            alert('No se puede eliminar el estudiante porque esta anotado a una materia');
+        }
+        else
+        {
+            console.error('Error al borrar:', err.error);
+        }
     }
 }
   

@@ -67,12 +67,27 @@ function updateStudent($conn, $id, $fullname, $email, $age)
 
 function deleteStudent($conn, $id) 
 {
-    $sql = "DELETE FROM students WHERE id = ?";
-    $stmt = $conn->prepare($sql);
+    $eliminable = "SELECT COUNT(*) FROM students_subjects WHERE student_id = ?";
+    $stmt = $conn->prepare($eliminable);
     $stmt->bind_param("i", $id);
     $stmt->execute();
+    $count = 0;
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
+    if($count == 0)
+    {
+        $sql = "DELETE FROM students WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
 
-    //Se retorna fila afectadas para validar en controlador
-    return ['deleted' => $stmt->affected_rows];
+        //Se retorna fila afectadas para validar en controlador
+        return ['deleted' => $stmt->affected_rows];
+    }
+    else
+    {
+        return ['error' => "has_relations"];
+    }
 }
 ?>
